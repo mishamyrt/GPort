@@ -1,0 +1,13 @@
+{
+    "username": "gbridge-u1290",
+    "password": "XRustik27041996!",
+    "url": "mqtts://mqtt.gbridge.io:8883",
+    "path": "gBridge/u1290",
+    "devices": [
+        {
+            "id": "d4251",
+            "name": "Yeelight Bedside Lamp",
+            "service": "yeelight-bedside"
+        }
+    ]
+}
