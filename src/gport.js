@@ -1,6 +1,12 @@
 const mqtt = require('mqtt')
-const config = require('./config.json')
-const { createLogger } = require('./helpers')
+const fs = require('fs')
+const { createLogger } = require('./logger')
+const {
+  prepareEnvironment,
+  getConfiguration
+} = require('./configuration')
+
+let config;
 
 class gPort {
   static start (argv) {
@@ -11,14 +17,20 @@ class gPort {
       argv.length > 2 && argv[2] === '-v'
     )
 
-    this.connect()
+    prepareEnvironment()
+      .then(() => getConfiguration())
+      .then((configuration) => (config = configuration))
+      .then(() => this.connect())
       .then((client) => (this.client = client))
       .then(() => this.initDevices())
       .then(() => this.client.on('message', this.handeMessage.bind(this)))
   }
 
   static updateStatus (id, feature, status) {
-    this.client.publish(`${config.path}/${id}/${feature}/set`, status)
+    return this.client.publish(
+      `${config.path}/${id}/${feature}/set`,
+      status
+    )
   }
 
   static async handeMessage (topic, message) {
